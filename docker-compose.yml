@@ -1,0 +1,68 @@
+version: '2'
+
+services:
+
+  db:
+    image: mariadb
+    command: mysqld --innodb-buffer-pool-size=20M
+    volumes:
+      - /app02/db:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=ccc
+      - MYSQL_USER=cccUser1
+      - MYSQL_PASSWORD=cccUser1Password
+      - MYSQL_ROOT_PASSWORD=mysqlAdminPW!
+    expose:
+      - 3306
+    restart: always
+    networks:
+      - back
+
+  sails:
+    image: sails-alpine
+    volumes:
+      - /app02/app:/app01
+    ports:
+      - 40101:1337
+    restart: always
+    links:
+      - db
+    networks:
+      - middle
+      - back
+    depends_on:
+      - db
+
+  math:
+    image: php:7.1.4-apache
+    volumes:
+      - /app02/mathfunctions:/var/www/html
+    ports:
+      - 40102:80 
+    networks:
+      - mathapi
+
+  web:
+    image: nginx
+    volumes:
+      - /app02/www:/usr/share/nginx/html
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    links:
+      - sails
+      - math
+    depends_on:
+      - sails
+      - math
+    networks:
+      - front
+      - middle
+      - mathapi
+
+networks:
+  back:
+  middle:
+  front:
+  mathapi:

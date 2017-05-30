@@ -1,0 +1,35 @@
+<!doctype html>
+<html ng-app="droidApp">
+  <head>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.min.js"></script>
+    <script src="bower_components/angular-material/angular-material.min.js"></script>
+    <script src="droid.js"></script>
+    <link rel="stylesheet" href="droid.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
+  <title>droid</title>
+  </head>
+  <body style="margin-left: 20px; margin-top: 20px; max-width: 940px;">
+    <h2>Docker Return On Investment Demo</h2>
+    <div ng-controller="questionsListController" ng-init="getQuestions()">
+      Total Questions: {{ questions.data.length }} <br />
+      <form name="listForm" method=post action="http://localhost:40102/droid.php">
+        <table cellspacing="2" border="0" cellpadding="1">
+          <tr ng-repeat="question in questions.data">
+            <td>{{ question.question }}?</td>
+            <td><input class="form-control" type={{question.ftype}} name={{question.vname}}></td>
+            <input type=hidden name="HandshakeKey" value="Docker-ROI-Demo-2017">
+          </tr>
+        </table>
+        <br />
+        <md-button type="submit" class="md-raised md-primary" ng-click="listForm.listSubmit()">Show me the money</md-button>
+      <br />
+    </form>
+    </div>
+  </body>
+</html>
